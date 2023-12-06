@@ -1,0 +1,7 @@
+.env
+*.pyc
+
+ChatGPT-advanced-data-analysis.md
+Copilot-in-VSCode.md
+raycast-gpt.md
+DALLE-image-generation.md
