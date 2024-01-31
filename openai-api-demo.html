@@ -513,53 +513,27 @@ Cluster 4 Theme:  All of the reviews are positive and discuss the quality of the
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>We have shown how to use the OpenAI API to generate embeddings for a dataset of food reviews. We have then used our machine to reduce the dimensionality of the embeddings, visualise them, and cluster them. Finally, we have used the OpenAI API again to summarise the clusters we have found.</p>
-<div class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>np <span class="op">=</span> <span class="dv">200</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>size <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>plist <span class="op">=</span> [<span class="dv">1</span>]<span class="op">*</span>np <span class="op">+</span> [<span class="dv">0</span>]<span class="op">*</span>(size<span class="op">-</span>np)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>plist <span class="op">*=</span><span class="dv">10</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>actual <span class="op">=</span> random.sample(plist, <span class="bu">len</span>(plist))</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>preddec <span class="op">=</span> [random.random() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(plist))]</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>preddec2 <span class="op">=</span> [x<span class="op">*</span>(y<span class="op">+</span>random.random())<span class="op">/</span><span class="dv">2</span> <span class="cf">for</span> x,y <span class="kw">in</span> <span class="bu">zip</span>(preddec, actual)]</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> [<span class="dv">1</span> <span class="cf">if</span> x <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="cf">else</span> <span class="dv">0</span> <span class="cf">for</span> x <span class="kw">in</span> preddec]</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>pred2 <span class="op">=</span> [<span class="dv">1</span> <span class="cf">if</span> x <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="cf">else</span> <span class="dv">0</span> <span class="cf">for</span> x <span class="kw">in</span> preddec2]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">2</span><span class="op">*</span>x<span class="op">*</span>y<span class="op">/</span>(x<span class="op">+</span>y) <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(precision, recall)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/3m/k3bhjj_54975gvpvvrkv8x6w0000gn/T/ipykernel_17921/3406121630.py:1: RuntimeWarning: invalid value encountered in scalar divide
-  max([2*x*y/(x+y) for x, y in zip(precision, recall)])</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="39">
-<pre><code>0.3336951983298539</code></pre>
-</div>
-</div>
 <div class="cell" data-execution_count="43">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> precision_score, recall_score, f1_score, accuracy_score, precision_recall_curve, auc</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>precision, recall, thresholds <span class="op">=</span> precision_recall_curve(actual, preddec)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>precision2, recall2, thresholds2 <span class="op">=</span> precision_recall_curve(actual, preddec2)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>plt.plot(recall, precision)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>plt.plot(recall2, precision2)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>plt.plot(recall, [<span class="dv">2</span><span class="op">*</span>x<span class="op">*</span>y<span class="op">/</span>(x<span class="op">+</span>y) <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(precision, recall)])</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>plt.plot(recall2, [<span class="dv">2</span><span class="op">*</span>x<span class="op">*</span>y<span class="op">/</span>(x<span class="op">+</span>y) <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(precision2, recall2)])</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Precision:"</span>, precision_score(actual, pred))</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Recall:"</span>, recall_score(actual, pred))</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"F1:"</span>, f1_score(actual, pred))</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AUC"</span>, auc(recall, precision))</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Precision:"</span>, precision_score(actual, pred2))</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Recall:"</span>, recall_score(actual, pred2))</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"F1:"</span>, f1_score(actual, pred2))</span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AUC"</span>, auc(recall2, precision2))</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> precision_score, recall_score, f1_score, accuracy_score, precision_recall_curve, auc</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>precision, recall, thresholds <span class="op">=</span> precision_recall_curve(actual, preddec)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>precision2, recall2, thresholds2 <span class="op">=</span> precision_recall_curve(actual, preddec2)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>plt.plot(recall, precision)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>plt.plot(recall2, precision2)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>plt.plot(recall, [<span class="dv">2</span><span class="op">*</span>x<span class="op">*</span>y<span class="op">/</span>(x<span class="op">+</span>y) <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(precision, recall)])</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>plt.plot(recall2, [<span class="dv">2</span><span class="op">*</span>x<span class="op">*</span>y<span class="op">/</span>(x<span class="op">+</span>y) <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(precision2, recall2)])</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Precision:"</span>, precision_score(actual, pred))</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Recall:"</span>, recall_score(actual, pred))</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"F1:"</span>, f1_score(actual, pred))</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AUC"</span>, auc(recall, precision))</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Precision:"</span>, precision_score(actual, pred2))</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Recall:"</span>, recall_score(actual, pred2))</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"F1:"</span>, f1_score(actual, pred2))</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AUC"</span>, auc(recall2, precision2))</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/var/folders/3m/k3bhjj_54975gvpvvrkv8x6w0000gn/T/ipykernel_17921/2777967723.py:8: RuntimeWarning: invalid value encountered in scalar divide
   plt.plot(recall, [2*x*y/(x+y) for x, y in zip(precision, recall)])</code></pre>
@@ -575,7 +549,7 @@ F1: 0.4441851419681058
 AUC 0.6782895849206549</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="openai-api-demo_files/figure-html/cell-16-output-3.png" class="img-fluid"></p>
+<p><img src="openai-api-demo_files/figure-html/cell-14-output-3.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
