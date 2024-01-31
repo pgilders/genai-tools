@@ -1,5 +1,6 @@
 .env
 *.pyc
+.DS_Store
 
 ChatGPT-advanced-data-analysis.md
 Copilot-in-VSCode.md
