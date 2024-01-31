@@ -4,5 +4,5 @@ I am collecting some introductory guides for students to use generative AI tools
 
 ## Contents
  - [Setting up GitHub Copilot in RStudio](Setup-Copilot-in-RStudio.md)
- - [Demo of OpenAI's API (python notebook)](openai-API-demo.ipynb)
+ - [Demo of OpenAI's API (python notebook)](openai-api-demo.ipynb)
    - [HTML version](openai-api-demo.html)
